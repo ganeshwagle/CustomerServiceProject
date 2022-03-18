@@ -25,11 +25,11 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
         return  customerRepository.save(CustomerService_Utils.customerDtoToCustomerEntity(customerDto));
     }
 
-    public Mono<Customer> updateCustomer(String id, CustomerUpdateDto customerUpdateDto) {
-        Mono<Customer> customerMono = customerRepository.findById(id);
+    public Mono<Customer> updateCustomer(String email, CustomerUpdateDto customerUpdateDto) {
+        Mono<Customer> customerMono = customerRepository.findByEmail(email);
         return customerMono.hasElement().flatMap(exists->{
             if(exists == Boolean.FALSE){
-                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND,"Please check the Customer id"));
+                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND,"Please check the Customer email"));
             }
             return customerMono.flatMap(customer ->
                 customerRepository.save(CustomerService_Utils.customerUpdateMapping(customer, customerUpdateDto))
@@ -37,21 +37,21 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
         });
     }
 
-    public Mono<Void> deleteCustomer(String id){
-        Mono<Customer> customerMono = customerRepository.findById(id);
+    public Mono<Void> deleteCustomer(String email){
+        Mono<Customer> customerMono = customerRepository.findByEmail(email);
         return customerMono.hasElement().flatMap(exists->{
             if(exists == Boolean.FALSE){
-                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer id"));
+                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer email"));
             }
-            return customerRepository.deleteById(id);
+            return customerRepository.deleteByEmail(email);
         });
     }
 
-    public Mono<Customer> getCustomer(String id){
-        Mono<Customer> customerMono = customerRepository.findById(id);
+    public Mono<Customer> getCustomer(String email){
+        Mono<Customer> customerMono = customerRepository.findByEmail(email);
         return customerMono.hasElement().flatMap(exists->{
             if(exists == Boolean.FALSE){
-                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer id"));
+                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer email"));
             }
             return customerMono;
         });
@@ -62,12 +62,12 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
                  .switchIfEmpty(Flux.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Database is empty!!")));
     }
 
-    public Mono<Customer> createAddress(String id, AddressDto addressDto){
+    public Mono<Customer> createAddress(String email, AddressDto addressDto){
         Address address = CustomerService_Utils.addressDtoToAddressEntity(addressDto);
-        Mono<Customer> customerMono = customerRepository.findById(id);
+        Mono<Customer> customerMono = customerRepository.findByEmail(email);
         return customerMono.hasElement().flatMap(exists->{
             if(exists == false){
-                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer id"));
+                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer email"));
             }
             return customerMono.flatMap(customer -> {
                 List<Address> addresses = customer.getAddress();
@@ -86,16 +86,16 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
         });
     }
 
-    public Mono<Customer> updateAddress(String id, String addressType, AddressUpdateDto addressUpdateDto){
-        Mono<Customer> customerMono = customerRepository.findById(id);
+    public Mono<Customer> updateAddress(String email, AddressUpdateDto addressUpdateDto){
+        Mono<Customer> customerMono = customerRepository.findByEmail(email);
         return customerMono.hasElement().flatMap(exists->{
             if(exists == false){
-                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer id"));
+                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer email"));
             }
             return customerMono.flatMap(customer -> {
                 List<Address> addresses = customer.getAddress();
                 Address foundAddress = addresses.stream()
-                        .filter(curaddress->curaddress.getAddress_type().equals(addressType))
+                        .filter(curaddress->curaddress.getAddress_type().equals(addressUpdateDto.getAddress_type()))
                         .findAny()
                         .orElse(null);
                 if(foundAddress==null) {
@@ -103,24 +103,19 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
                 }
                 Address address = CustomerService_Utils.addressUpdateMapping(foundAddress, addressUpdateDto);
                 addresses.remove(foundAddress);
-                Address check = addresses.stream()
-                        .filter(curaddress->curaddress.getAddress_type().equals(addressUpdateDto.getAddress_type()))
-                        .findAny()
-                        .orElse(null);
-                if(check==null){
-                    customer.setAddress(address);
-                    return customerRepository.save(customer);
-                }
-                return Mono.error(new SystemException(ErrorCode.ADDRESS_ALREADY_EXISTS, "Please check the Address type"));
+                customer.setAddress(address);
+                return customerRepository.save(customer);
+
             });
         });
+
     }
 
-    public Mono<Customer> deleteAddress(String id, String addressType){
-        Mono<Customer> customerMono = customerRepository.findById(id);
+    public Mono<Customer> deleteAddress(String email, String addressType){
+        Mono<Customer> customerMono = customerRepository.findByEmail(email);
         return customerMono.hasElement().flatMap(exists->{
             if(exists == false){
-                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer id"));
+                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer email"));
             }
             return customerMono.flatMap(customer -> {
                 List<Address> addresses = customer.getAddress();

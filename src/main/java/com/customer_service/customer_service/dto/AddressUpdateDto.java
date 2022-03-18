@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 
@@ -12,6 +14,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressUpdateDto {
+    @NotBlank(message = "Address type can't be blank")
     private String address_type;
     private String address_line1;
     private String address_line2;

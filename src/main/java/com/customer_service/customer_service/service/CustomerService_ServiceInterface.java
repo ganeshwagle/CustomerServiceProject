@@ -15,6 +15,6 @@ public interface CustomerService_ServiceInterface {
     Mono<Customer> getCustomer(String id);
     Flux<Customer> getAllCustomer();
     Mono<Customer> createAddress(String id, AddressDto addressDto);
-    Mono<Customer> updateAddress(String id, String addressType, AddressUpdateDto addressUpdateDto);
+    Mono<Customer> updateAddress(String id, AddressUpdateDto addressUpdateDto);
     Mono<Customer> deleteAddress(String id, String addressType);
 }

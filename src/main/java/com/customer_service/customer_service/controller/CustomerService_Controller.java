@@ -23,19 +23,19 @@ public class CustomerService_Controller {
         return customerService.createCustomer(customerDto);
     }
 
-    @PutMapping("/updateCustomer/{id}")
-    public Mono<Customer> updateCustomer(@PathVariable("id") String id, @Valid @RequestBody CustomerUpdateDto customerUpdateDto){
-        return customerService.updateCustomer(id, customerUpdateDto);
+    @PutMapping("/updateCustomer/{email}")
+    public Mono<Customer> updateCustomer(@PathVariable("email") String email, @Valid @RequestBody CustomerUpdateDto customerUpdateDto){
+        return customerService.updateCustomer(email, customerUpdateDto);
     }
 
-    @DeleteMapping("/deleteCustomer/{id}")
-    public Mono<?> deleteCustomer(@PathVariable("id") String id){
-        return customerService.deleteCustomer(id);
+    @DeleteMapping("/deleteCustomer/{email}")
+    public Mono<?> deleteCustomer(@PathVariable("email") String email){
+        return customerService.deleteCustomer(email);
     }
 
-    @GetMapping("/getCustomer/{id}")
-    public Mono<Customer> getCustomer(@PathVariable("id") String id){
-        return customerService.getCustomer(id);
+    @GetMapping("/getCustomer/{email}")
+    public Mono<Customer> getCustomer(@PathVariable("email") String email){
+        return customerService.getCustomer(email);
     }
 
     @GetMapping("/getCustomers")
@@ -43,18 +43,18 @@ public class CustomerService_Controller {
         return customerService.getAllCustomer();
     }
 
-    @PostMapping("/createAddress/{id}")
-    public Mono<Customer> createAddress(@PathVariable("id") String id, @Valid @RequestBody AddressDto addressDto){
-        return customerService.createAddress(id,addressDto);
+    @PostMapping("/createAddress/{email}")
+    public Mono<Customer> createAddress(@PathVariable("email") String email, @Valid @RequestBody AddressDto addressDto){
+        return customerService.createAddress(email,addressDto);
     }
 
-    @PutMapping("/updateAddress/{id}/{addressType}")
-    public Mono<Customer> updateAddress(@PathVariable("id") String id, @PathVariable("addressType") String addressType, @Valid @RequestBody AddressUpdateDto addressUpdateDto){
-        return customerService.updateAddress(id, addressType, addressUpdateDto);
+    @PutMapping("/updateAddress/{email}")
+    public Mono<Customer> updateAddress(@PathVariable("email") String email, @Valid @RequestBody AddressUpdateDto addressUpdateDto){
+        return customerService.updateAddress(email, addressUpdateDto);
     }
 
-    @DeleteMapping("/deleteAddress/{id}/{addressType}")
-    public Mono<Customer> deleteAddress(@PathVariable("id") String id, @PathVariable("addressType") String addressType){
-        return customerService.deleteAddress(id, addressType);
+    @DeleteMapping("/deleteAddress/{email}/{addressType}")
+    public Mono<Customer> deleteAddress(@PathVariable("email") String email, @PathVariable("addressType") String addressType){
+        return customerService.deleteAddress(email, addressType);
     }
 }
