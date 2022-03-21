@@ -1,6 +1,8 @@
 package com.customer_service.customer_service.dto;
 
 import com.customer_service.customer_service.entity.Address;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,7 @@ import javax.validation.constraints.Pattern;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CustomerDto {
     @NotBlank(message = "First name field can't be empty")
     private String first_name;

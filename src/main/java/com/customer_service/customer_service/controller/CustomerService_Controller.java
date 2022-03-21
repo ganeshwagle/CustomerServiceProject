@@ -33,9 +33,9 @@ public class CustomerService_Controller {
         return customerService.deleteCustomer(email);
     }
 
-    @GetMapping("/getCustomer/{email}")
-    public Mono<Customer> getCustomer(@PathVariable("email") String email){
-        return customerService.getCustomer(email);
+    @GetMapping("/getCustomer/{id}")
+    public Mono<Customer> getCustomer(@PathVariable("id") String id){
+        return customerService.getCustomer(id);
     }
 
     @GetMapping("/getCustomers")

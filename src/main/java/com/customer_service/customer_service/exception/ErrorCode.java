@@ -9,7 +9,7 @@ import static org.springframework.http.HttpStatus.*;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    CUSTOMER_NOT_FOUND(INTERNAL_SERVER_ERROR, "System error"),
+    CUSTOMER_NOT_FOUND(BAD_REQUEST, "System error"),
     CANNOT_BE_NULL(INTERNAL_SERVER_ERROR, "System error"),
     CUSTOMER_VALIDATION_ERROR(BAD_REQUEST, "Validation error"),
     ENTITY_NOT_FOUND(NOT_FOUND, "Entity not found"),

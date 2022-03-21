@@ -22,6 +22,8 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
     CustomerService_Repository customerRepository;
 
     public Mono<Customer> createCustomer(CustomerDto customerDto){
+        if(customerDto==null)
+            return Mono.error(new SystemException(ErrorCode.ENTITY_NOT_FOUND,"Customer can't be empty"));
         return  customerRepository.save(CustomerService_Utils.customerDtoToCustomerEntity(customerDto));
     }
 
@@ -47,11 +49,11 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
         });
     }
 
-    public Mono<Customer> getCustomer(String email){
-        Mono<Customer> customerMono = customerRepository.findByEmail(email);
+    public Mono<Customer> getCustomer(String id){
+        Mono<Customer> customerMono = customerRepository.findById(id);
         return customerMono.hasElement().flatMap(exists->{
             if(exists == Boolean.FALSE){
-                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer email"));
+                return Mono.error(new SystemException(ErrorCode.CUSTOMER_NOT_FOUND, "Please check the Customer id"));
             }
             return customerMono;
         });
