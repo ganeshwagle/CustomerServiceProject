@@ -11,8 +11,8 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerUpdateDto {
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     @Pattern(regexp = "[1-9][0-9]{9}", message = "Invalid phone number")
-    private String phone_number;
+    private String phoneNumber;
 }

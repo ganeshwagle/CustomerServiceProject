@@ -15,15 +15,15 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class AddressUpdateDto {
     @NotBlank(message = "Address type can't be blank")
-    private String address_type;
-    private String address_line1;
-    private String address_line2;
-    private String address_line3;
+    private String addressType;
+    private String addressLine1;
+    private String addressLine2;
+    private String addressLine3;
     private String landmark;
     private String municipal;
     private String city;
     private String state;
 
     @Pattern(regexp = "[0-9]{6}", message = "Invalid Post Code")
-    private String post_code;
+    private String postCode;
 }

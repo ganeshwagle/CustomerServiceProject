@@ -18,13 +18,12 @@ import javax.validation.constraints.Pattern;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CustomerDto {
     @NotBlank(message = "First name field can't be empty")
-    private String first_name;
+    private String firstName;
 
-    @NotBlank(message = "Last name field can't be empty")
-    private String last_name;
+    //@NotBlank(message = "Last name field can't be empty")
+    private String lastName;
 
     @Email(message = "Invalid email id")
     @NotBlank(message = "Email field can't be empty")
@@ -32,5 +31,5 @@ public class CustomerDto {
 
     @Pattern(regexp="[1-9][0-9]{9}",message = "Invalid phone number")
     @NotBlank(message = "Phone number field can't be empty")
-    private String phone_number;
+    private String phoneNumber;
 }

@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,26 +22,27 @@ public class Customer {
     private String id;
 
     @JsonProperty("first_name")
-    private String first_name;
+    private String firstName;
 
     @JsonProperty("last_name")
-    private String last_name;
+    private String lastName;
 
     @Indexed(unique = true)
     @JsonProperty("email")
     private String email;
 
     @JsonProperty("phone_number")
-    private String phone_number;
+    private String phoneNumber;
 
+    @Valid
     @JsonProperty("address")
     private List<Address> address= new ArrayList<>();
 
-    public void setAddress(Address address){
+   /* public void setAddress(Address address){
         this.address.add(address);
     }
 
     public void setAddress(List<Address> address){
         this.address.addAll(address);
-    }
+    }*/
 }

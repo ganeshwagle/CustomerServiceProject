@@ -4,6 +4,8 @@ import com.customer_service.customer_service.dto.AddressDto;
 import com.customer_service.customer_service.dto.AddressUpdateDto;
 import com.customer_service.customer_service.dto.CustomerDto;
 import com.customer_service.customer_service.dto.CustomerUpdateDto;
+import com.customer_service.customer_service.entity.Address;
+import com.customer_service.customer_service.entity.Customer;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,8 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -31,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CustomerServiceControllerTest {
     @Autowired
     private WebTestClient webTestClient;
-   // private String id;
+    private static String id;
 
     @Order(1)
     @Test
@@ -51,37 +55,35 @@ public class CustomerServiceControllerTest {
         CustomerDto customerDto = new CustomerDto();
         createCustomerDto(customerDto);
         webTestClient.post().uri("/createCustomer")
+                .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(customerDto),CustomerDto.class)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(HashMap.class)
-                .value(customer->{
-                    //id = (String) customer.get("id");
-                    //System.out.println("this is the id="+id);
-                    assertEquals("ganesh",customer.get("first_name"));
-                    assertEquals("wagle",customer.get("last_name"));
+                .expectBody(Customer.class)
+                .value(customer -> {
+                    assertNotNull(customer);
+                    id = customer.getId();
                 });
-                /*.expectBody()
-                .json("{\"first_name\":\"ganesh\"," +
+                /*.json("{\"first_name\":\"ganesh\"," +
                         "\"last_name\":\"wagle\"," +
                         "\"email\":\"ganeshwagle@gmail.com\"," +
                         "\"phone_number\":\"1231231231\"," +
                         "\"address\":[]}");*/
     }
     private void createCustomerDto(CustomerDto customerDto){
-        customerDto.setFirst_name("ganesh");
-        customerDto.setLast_name("wagle");
+        customerDto.setFirstName("ganesh");
+        customerDto.setLastName("wagle");
         customerDto.setEmail("ganeshwagle@gmail.com");
-        customerDto.setPhone_number("1231231231");
+        customerDto.setPhoneNumber("1231231231");
     }
 
     @Order(3)
     @Test
     public void updateCustomerTest_1(){
         CustomerUpdateDto customerUpdateDto = new CustomerUpdateDto();
-        customerUpdateDto.setFirst_name("new name");
+        customerUpdateDto.setFirstName("new name");
 
         webTestClient.put()
                 .uri("/updateCustomer/ganeshwae@gmail.com")
@@ -94,7 +96,7 @@ public class CustomerServiceControllerTest {
     @Test
     public void updateCustomerTest_2(){
         CustomerUpdateDto customerUpdateDto = new CustomerUpdateDto();
-        customerUpdateDto.setFirst_name("new name");
+        customerUpdateDto.setFirstName("new name");
 
         webTestClient.put()
                 .uri("/updateCustomer/ganeshwagle@gmail.com")
@@ -113,7 +115,7 @@ public class CustomerServiceControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
     }
-   /* @Order(6)
+    @Order(6)
     @Test
     public void getCustomerTest_2(){
         System.out.println(id);
@@ -121,11 +123,12 @@ public class CustomerServiceControllerTest {
                 .uri("getCustomer/"+id)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.first_name").isEqualTo("new name")
-                .jsonPath("$.email").isEqualTo("ganeshwagle@gmail.com");
+                .expectBody(Customer.class)
+                .value(customer -> {
+                    assertEquals("ganeshwagle@gmail.com",customer.getEmail());
+                    assertEquals(id, customer.getId());
+                });
     }
-*/
     @Order(7)
     @Test
     public void getCustomers(){
@@ -133,7 +136,7 @@ public class CustomerServiceControllerTest {
                 .uri("/getCustomers")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(HashMap.class)
+                .expectBodyList(Customer.class)
                 .value(customers->{
                     assertNotNull(customers);
                     System.out.println(customers);
@@ -152,13 +155,13 @@ public class CustomerServiceControllerTest {
     }
 
     private void createAddress(AddressDto addressDto){
-        addressDto.setAddress_type("home address");
-        addressDto.setAddress_line1("janatha nagara");
+        addressDto.setAddressType("home address");
+        addressDto.setAddressLine1("janatha nagara");
         addressDto.setLandmark("maha ganapati");
         addressDto.setMunicipal("manipal");
         addressDto.setCity("udupi");
         addressDto.setState("karnataka");
-        addressDto.setPost_code("576113");
+        addressDto.setPostCode("576113");
     }
 
     @Order(9)
@@ -171,11 +174,11 @@ public class CustomerServiceControllerTest {
                 .body(Mono.just(addressDto),AddressDto.class)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(HashMap.class)
+                .expectBody(Customer.class)
                 .value(customer->{
-                    ArrayList<?> addresses = (ArrayList<?>) customer.get("address");
-                    LinkedHashMap<String, String> address= (LinkedHashMap<String, String>) addresses.get(0);
-                    assertEquals("home address",address.get("address_type"));
+                   List<Address> addresses = customer.getAddress();
+                   assertEquals("home address",addresses.get(0).getAddressType());
+                   assertEquals("janatha nagara",addresses.get(0).getAddressLine1());
                 });
     }
 
@@ -183,7 +186,7 @@ public class CustomerServiceControllerTest {
     @Test
     public void updateAddressTest_1(){
         AddressUpdateDto addressUpdateDto = new AddressUpdateDto();
-        addressUpdateDto.setAddress_type("home address");
+        addressUpdateDto.setAddressType("home address");
         webTestClient.put()
                 .uri("/updateAddress/invalid@email.com")
                 .body(Mono.just(addressUpdateDto),AddressUpdateDto.class)
@@ -195,18 +198,17 @@ public class CustomerServiceControllerTest {
     @Test
     public void updateAddressTest_2(){
         AddressUpdateDto addressUpdateDto = new AddressUpdateDto();
-        addressUpdateDto.setAddress_type("home address");
-        addressUpdateDto.setAddress_line1("new value");
+        addressUpdateDto.setAddressType("home address");
+        addressUpdateDto.setAddressLine1("new value");
         webTestClient.put()
                 .uri("/updateAddress/ganeshwagle@gmail.com")
                 .body(Mono.just(addressUpdateDto),AddressUpdateDto.class)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(HashMap.class)
+                .expectBody(Customer.class)
                 .value(customer->{
-                    ArrayList<?> addresses = (ArrayList<?>) customer.get("address");
-                    LinkedHashMap<String, String> address= (LinkedHashMap<String, String>) addresses.get(0);
-                    assertEquals("new value",address.get("address_line1"));
+                    List<Address> addresses = customer.getAddress();
+                    assertEquals("new value",addresses.get(0).getAddressLine1());
                 });
     }
 

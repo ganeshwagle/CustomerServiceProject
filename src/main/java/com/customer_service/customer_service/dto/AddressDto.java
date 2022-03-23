@@ -14,14 +14,14 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class AddressDto {
     @NotBlank(message = "Address type can't be blank")
-    private String address_type;
+    private String addressType;
 
     @NotBlank(message="Address_line1 value can't be empty")
-    private String address_line1;
+    private String addressLine1;
 
-    private String address_line2;
+    private String addressLine2;
 
-    private String address_line3;
+    private String addressLine3;
 
     @NotBlank(message="Landmark field can't be empty")
     private String landmark;
@@ -37,5 +37,5 @@ public class AddressDto {
 
     @Pattern(regexp = "[0-9]{6}", message = "Invalid Post Code")
     @NotBlank(message="Post Code field can't be empty")
-    private String post_code;
+    private String postCode;
 }

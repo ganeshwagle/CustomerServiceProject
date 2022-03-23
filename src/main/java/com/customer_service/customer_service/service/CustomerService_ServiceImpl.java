@@ -22,8 +22,6 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
     CustomerService_Repository customerRepository;
 
     public Mono<Customer> createCustomer(CustomerDto customerDto){
-        if(customerDto==null)
-            return Mono.error(new SystemException(ErrorCode.ENTITY_NOT_FOUND,"Customer can't be empty"));
         return  customerRepository.save(CustomerService_Utils.customerDtoToCustomerEntity(customerDto));
     }
 
@@ -74,12 +72,13 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
             return customerMono.flatMap(customer -> {
                 List<Address> addresses = customer.getAddress();
                 Address foundAddress = addresses.stream()
-                        .filter(curaddress->curaddress.getAddress_type().equals(address.getAddress_type()))
+                        .filter(curaddress->curaddress.getAddressType().equals(address.getAddressType()))
                         .findAny()
                         .orElse(null);
 
                 if(foundAddress==null) {
-                    customer.setAddress(address);
+                    addresses.add(address);
+                    customer.setAddress(addresses);
                     return customerRepository.save(customer);
                 }
                  return Mono.error(new SystemException(ErrorCode.ADDRESS_ALREADY_EXISTS, "Please check the Address type"));
@@ -97,7 +96,7 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
             return customerMono.flatMap(customer -> {
                 List<Address> addresses = customer.getAddress();
                 Address foundAddress = addresses.stream()
-                        .filter(curaddress->curaddress.getAddress_type().equals(addressUpdateDto.getAddress_type()))
+                        .filter(curaddress->curaddress.getAddressType().equals(addressUpdateDto.getAddressType()))
                         .findAny()
                         .orElse(null);
                 if(foundAddress==null) {
@@ -105,7 +104,8 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
                 }
                 Address address = CustomerService_Utils.addressUpdateMapping(foundAddress, addressUpdateDto);
                 addresses.remove(foundAddress);
-                customer.setAddress(address);
+                addresses.add(address);
+                customer.setAddress(addresses);
                 return customerRepository.save(customer);
 
             });
@@ -122,7 +122,7 @@ public class CustomerService_ServiceImpl implements CustomerService_ServiceInter
             return customerMono.flatMap(customer -> {
                 List<Address> addresses = customer.getAddress();
                 Address foundAddress = addresses.stream()
-                        .filter(curaddress->curaddress.getAddress_type().equals(addressType))
+                        .filter(curaddress->curaddress.getAddressType().equals(addressType))
                         .findAny()
                         .orElse(null);
 

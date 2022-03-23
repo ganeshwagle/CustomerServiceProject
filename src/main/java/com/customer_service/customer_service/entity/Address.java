@@ -12,16 +12,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Address {
     @JsonProperty("address_type")
-    private String address_type;
+    private String addressType;
 
     @JsonProperty("address_line1")
-    private String address_line1;
+    private String addressLine1;
 
     @JsonProperty("address_line2")
-    private String address_line2;
+    private String addressLine2;
 
     @JsonProperty("address_line3")
-    private String address_line3;
+    private String addressLine3;
 
     @JsonProperty("landmark")
     private String landmark;
@@ -39,8 +39,8 @@ public class Address {
     private String country = "India";
 
     @JsonProperty("country_code")
-    private String country_code = "91";
+    private String countryCode = "91";
 
     @JsonProperty("post_code")
-    private String post_code;
+    private String postCode;
 }
