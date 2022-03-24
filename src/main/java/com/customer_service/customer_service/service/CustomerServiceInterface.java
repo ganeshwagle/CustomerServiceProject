@@ -8,7 +8,7 @@ import com.customer_service.customer_service.entity.Customer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface CustomerService_ServiceInterface {
+public interface CustomerServiceInterface {
     Mono<Customer> createCustomer(CustomerDto customerDto);
     Mono<Customer> updateCustomer(String id, CustomerUpdateDto customerUpdateDto);
     Mono<Void> deleteCustomer(String id);

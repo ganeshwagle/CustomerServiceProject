@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface CustomerService_Repository extends ReactiveMongoRepository<Customer, String> {
+public interface CustomerServiceRepository extends ReactiveMongoRepository<Customer, String> {
     Mono<Customer> findByEmail(String email);
     Mono<Void> deleteByEmail(String email);
 }

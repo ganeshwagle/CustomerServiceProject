@@ -18,12 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -32,14 +27,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureDataMongo
-public class CustomerServiceControllerTest {
+class CustomerServiceControllerTest {
     @Autowired
     private WebTestClient webTestClient;
     private static String id;
 
     @Order(1)
     @Test
-    public void createCustomerTest_1(){
+     void createCustomerTest_1(){
         CustomerDto customerDto = new CustomerDto();
         webTestClient.post()
                 .uri("/createCustomer")
@@ -51,7 +46,7 @@ public class CustomerServiceControllerTest {
 
     @Order(2)
     @Test
-    public void createCustomerTest_2(){
+     void createCustomerTest_2(){
         CustomerDto customerDto = new CustomerDto();
         createCustomerDto(customerDto);
         webTestClient.post().uri("/createCustomer")
@@ -81,12 +76,12 @@ public class CustomerServiceControllerTest {
 
     @Order(3)
     @Test
-    public void updateCustomerTest_1(){
+     void updateCustomerTest_1(){
         CustomerUpdateDto customerUpdateDto = new CustomerUpdateDto();
         customerUpdateDto.setFirstName("new name");
 
         webTestClient.put()
-                .uri("/updateCustomer/ganeshwae@gmail.com")
+                .uri("/updateCustomer/"+id+"some")
                 .body(Mono.just(customerUpdateDto),CustomerUpdateDto.class)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -94,30 +89,30 @@ public class CustomerServiceControllerTest {
 
     @Order(4)
     @Test
-    public void updateCustomerTest_2(){
+     void updateCustomerTest_2(){
         CustomerUpdateDto customerUpdateDto = new CustomerUpdateDto();
         customerUpdateDto.setFirstName("new name");
 
         webTestClient.put()
-                .uri("/updateCustomer/ganeshwagle@gmail.com")
+                .uri("/updateCustomer/"+id)
                 .body(Mono.just(customerUpdateDto),CustomerUpdateDto.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.first_name").isEqualTo("new name");
+                .jsonPath("$.firstName").isEqualTo("new name");
     }
 
     @Order(5)
     @Test
-    public void getCustomerTest_1(){
+     void getCustomerTest_1(){
         webTestClient.get()
-                .uri("getCustomer/invalid@gmail.com")
+                .uri("getCustomer/"+id+"so")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
     @Order(6)
     @Test
-    public void getCustomerTest_2(){
+     void getCustomerTest_2(){
         System.out.println(id);
         webTestClient.get()
                 .uri("getCustomer/"+id)
@@ -131,7 +126,7 @@ public class CustomerServiceControllerTest {
     }
     @Order(7)
     @Test
-    public void getCustomers(){
+     void getCustomers(){
         webTestClient.get()
                 .uri("/getCustomers")
                 .exchange()
@@ -145,10 +140,10 @@ public class CustomerServiceControllerTest {
 
     @Order(8)
     @Test
-    public void createAddressTest_1(){
+     void createAddressTest_1(){
         AddressDto addressDto = new AddressDto();
         webTestClient.post()
-                .uri("/createAddress/ganeshwagle@gmail.com")
+                .uri("/createAddress/"+id)
                 .body(Mono.just(addressDto),AddressDto.class)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -166,11 +161,11 @@ public class CustomerServiceControllerTest {
 
     @Order(9)
     @Test
-    public void createAddressTest_2(){
+     void createAddressTest_2(){
         AddressDto addressDto = new AddressDto();
         createAddress(addressDto);
         webTestClient.post()
-                .uri("/createAddress/ganeshwagle@gmail.com")
+                .uri("/createAddress/"+id)
                 .body(Mono.just(addressDto),AddressDto.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -184,11 +179,11 @@ public class CustomerServiceControllerTest {
 
     @Order(10)
     @Test
-    public void updateAddressTest_1(){
+     void updateAddressTest_1(){
         AddressUpdateDto addressUpdateDto = new AddressUpdateDto();
         addressUpdateDto.setAddressType("home address");
         webTestClient.put()
-                .uri("/updateAddress/invalid@email.com")
+                .uri("/updateAddress/"+id+"so")
                 .body(Mono.just(addressUpdateDto),AddressUpdateDto.class)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -196,12 +191,12 @@ public class CustomerServiceControllerTest {
 
     @Order(11)
     @Test
-    public void updateAddressTest_2(){
+     void updateAddressTest_2(){
         AddressUpdateDto addressUpdateDto = new AddressUpdateDto();
         addressUpdateDto.setAddressType("home address");
         addressUpdateDto.setAddressLine1("new value");
         webTestClient.put()
-                .uri("/updateAddress/ganeshwagle@gmail.com")
+                .uri("/updateAddress/"+id)
                 .body(Mono.just(addressUpdateDto),AddressUpdateDto.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -214,36 +209,36 @@ public class CustomerServiceControllerTest {
 
     @Order(12)
     @Test
-    public void deleteAddressTest_1(){
+     void deleteAddressTest_1(){
         webTestClient.delete()
-                .uri("/deleteAddress/ganeshwagle@email.com/inavlid value")
+                .uri("/deleteAddress/"+id+"/inavlid value")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
 
     @Order(13)
     @Test
-    public void deleteAddressTest_2(){
+     void deleteAddressTest_2(){
         webTestClient.delete()
-                .uri("/deleteAddress/ganeshwagle@gmail.com/home address")
+                .uri("/deleteAddress/"+id+"/home address")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Order(14)
     @Test
-    public void deleteCustomerTest_1(){
+     void deleteCustomerTest_1(){
         webTestClient.delete()
-                .uri("/deleteCustomer/invalid@gmail.com")
+                .uri("/deleteCustomer/"+id+"so")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
 
     @Order(15)
     @Test
-    public void deleteCustomerTest_2(){
+     void deleteCustomerTest_2(){
         webTestClient.delete()
-                .uri("/deleteCustomer/ganeshwagle@gmail.com")
+                .uri("/deleteCustomer/"+id)
                 .exchange()
                 .expectStatus().isOk();
     }

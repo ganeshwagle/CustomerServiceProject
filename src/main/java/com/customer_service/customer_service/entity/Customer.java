@@ -1,6 +1,5 @@
 package com.customer_service.customer_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -20,29 +19,15 @@ public class Customer {
 
     @Id
     private String id;
-
-    @JsonProperty("first_name")
     private String firstName;
-
-    @JsonProperty("last_name")
     private String lastName;
 
     @Indexed(unique = true)
-    @JsonProperty("email")
     private String email;
 
-    @JsonProperty("phone_number")
     private String phoneNumber;
 
     @Valid
-    @JsonProperty("address")
     private List<Address> address= new ArrayList<>();
 
-   /* public void setAddress(Address address){
-        this.address.add(address);
-    }
-
-    public void setAddress(List<Address> address){
-        this.address.addAll(address);
-    }*/
 }

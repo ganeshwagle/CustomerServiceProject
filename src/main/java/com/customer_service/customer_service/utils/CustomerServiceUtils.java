@@ -9,36 +9,36 @@ import com.customer_service.customer_service.entity.Customer;
 import org.modelmapper.ModelMapper;
 
 
-public class CustomerService_Utils {
+public class CustomerServiceUtils {
+
+    private CustomerServiceUtils(){
+        throw new IllegalStateException("illegal state");
+    }
+
     public static Customer customerDtoToCustomerEntity(CustomerDto customerDto){
         ModelMapper modelMapper = new ModelMapper();
-        Customer customer = modelMapper.map(customerDto, Customer.class);
-        return customer;
+        return  modelMapper.map(customerDto, Customer.class);
     }
 
     public  static CustomerDto customerEntityToCustomerDto(Customer customer){
         ModelMapper modelMapper = new ModelMapper();
-        CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class);
-        return customerDto;
+        return modelMapper.map(customer, CustomerDto.class);
     }
 
     public static Address addressDtoToAddressEntity(AddressDto addressDto){
         ModelMapper modelMapper = new ModelMapper();
-        Address address = modelMapper.map(addressDto, Address.class);
-        return address;
+        return modelMapper.map(addressDto, Address.class);
     }
 
     public  static AddressDto addressEntityToAddressDto(Address address){
         ModelMapper modelMapper = new ModelMapper();
-        AddressDto addressDto = modelMapper.map(address, AddressDto.class);
-        return addressDto;
+        return modelMapper.map(address, AddressDto.class);
     }
 
     public static Customer customerUpdateMapping(Customer customer, CustomerUpdateDto customerUpdateDto) {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setSkipNullEnabled(true);
         modelMapper.map(customerUpdateDto, customer);
-        System.out.println(customer.toString());
         return customer;
     }
 
